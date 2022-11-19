@@ -75,7 +75,7 @@ fn check_until(number: u32) {
         }
     }
 
-    println!("{} primes found until {}", count, number);
+    eprintln!("{} primes found until {}", count, number);
 }
 
 
