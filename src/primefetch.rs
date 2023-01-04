@@ -1,14 +1,14 @@
 
 pub mod primefetch {
     pub struct Config {
-        number: u32,
+        number: u64,
         pub until_mode: bool,
         pub quiet: bool,
         pub help: bool
     }
 
     impl Config {
-        pub fn new(num: u32, count_until: bool, shush: bool, help_val: bool) -> Config {
+        pub fn new(num: u64, count_until: bool, shush: bool, help_val: bool) -> Config {
             Config {
                 number: num,
                 until_mode: count_until,
@@ -17,7 +17,7 @@ pub mod primefetch {
             }
         }
 
-        pub fn get_number(&self) -> u32 {
+        pub fn get_number(&self) -> u64 {
            self.number 
         }
     }
@@ -32,6 +32,7 @@ pub mod cli {
         
         OPTIONS:
         
+        --help, -h - Show this help.
         --quiet, -q - Do not output anything unneccesary.
         --count-to - Count from 2 to NUMBER instead of checking NUMBER for primality.
         \n");

@@ -38,7 +38,7 @@ fn gen_config(args: Vec<String>) -> Config {
         None => panic!("Args are empty"),
     };
 
-    let number: u32 = match number.trim().parse() {
+    let number: u64 = match number.trim().parse() {
         Ok( num ) => num,
         Err(_) => {
             eprintln!("Thou must enter your number last!");
@@ -66,7 +66,7 @@ fn check_primality(config: &Config) {
     }
 }
 
-fn check_until(number: u32) {
+fn check_until(number: u64) {
     let mut count = 0;
     for i in 2..number {
         if is_prime(i) {
