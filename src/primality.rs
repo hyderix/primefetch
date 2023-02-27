@@ -1,5 +1,4 @@
-
-pub mod primality {
+pub mod utils {
     pub fn is_prime(n: u64) -> bool {
         let mut a = 1;
         let largest = loop {
@@ -9,6 +8,7 @@ pub mod primality {
                 a += 1;
             }
         };
+
         let largest_num_tested: u64 = largest;
 
         for num in 2..largest_num_tested {
@@ -16,6 +16,7 @@ pub mod primality {
                 return false;
             }
         }
+
         true
     }
 

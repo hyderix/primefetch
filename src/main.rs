@@ -1,54 +1,11 @@
-pub mod primality;
-pub mod primefetch;
+mod primality;
+mod primefetch;
 
 use std::{env,process};
 
-use primality::primality::is_prime;
-use primefetch::primefetch::Config;
-use primefetch::cli::print_help;
-
-fn gen_config(args: Vec<String>) -> Config {
-
-    // Quiet mode - YES or nah
-    let mut quiet: bool = false;
-    // Count to a number, or check the number - that's the question
-    let mut count: bool = false;
-    // To help, or to not help
-    let mut help: bool = false;
-    for arg in &args {
-        if arg == "--quiet" || arg == "-q" {
-            quiet = true;
-        }
-
-        if arg == "--count-to" {
-            count = true;
-        }
-
-        if arg == "--help" || arg == "-h" {
-            help = true;
-        }
-    }
-
-    if help {
-        return Config::new(0, false, false, true);
-    }
-
-    let number: String = match args.last() {
-        Some(a) => a.to_string(),
-        None => panic!("Args are empty"),
-    };
-
-    let number: u64 = match number.trim().parse() {
-        Ok( num ) => num,
-        Err(_) => {
-            eprintln!("Thou must enter your number last!");
-            process::exit(64);
-        }
-    };
-
-    Config::new(number, count, quiet, help)
-
-}
+use primality::utils::is_prime;
+use primefetch::config::Config;
+use primefetch::cli::{print_help,gen_config};
 
 fn check_primality(config: &Config) {
     if is_prime(config.get_number()) {
