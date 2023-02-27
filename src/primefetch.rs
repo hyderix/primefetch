@@ -1,24 +1,35 @@
-
 pub mod config {
     pub struct Config {
         number: u64,
         pub until_mode: bool,
         pub quiet: bool,
-        pub help: bool
+        pub help: bool,
+        file_name: String,
     }
-
     impl Config {
-        pub fn new(num: u64, count_until: bool, shush: bool, help_val: bool) -> Config {
+        pub fn new(
+            number: u64, until_mode: bool,
+            quiet: bool,
+            help: bool,
+            file_name: Option<String>,
+        ) -> Config {
+            let file_name: String = match file_name {
+                Some(string) => string,
+                _ => {
+                    todo!()
+                }
+            };
             Config {
-                number: num,
-                until_mode: count_until,
-                quiet: shush,
-                help: help_val,
+                number,
+                until_mode,
+                quiet,
+                help,
+                file_name,
             }
         }
 
         pub fn get_number(&self) -> u64 {
-           self.number 
+            self.number
         }
     }
 }
@@ -26,7 +37,8 @@ pub mod config {
 pub mod cli {
     pub fn print_help() {
         use std::process;
-        print!("primefetch [OPTIONS] [NUMBER]
+        print!(
+            "primefetch [OPTIONS] [NUMBER]
 
         Perform checks on numbers regarding primality.
         
@@ -36,11 +48,13 @@ pub mod cli {
         --quiet, -q - Do not output anything unneccesary.
         --count-to - Count from 2 to NUMBER instead of checking NUMBER for primality.
         --file, -f <FILE> - Read lines from <FILE> and output only the prime numbers.
-        \n");
+        \n"
+        );
 
         process::exit(0);
     }
 
+    use crate::primefetch::config::Config;
     pub fn gen_config(args: Vec<String>) -> Config {
         use std::process;
 
@@ -50,7 +64,12 @@ pub mod cli {
         let mut count: bool = false;
         // To help, or to not help
         let mut help: bool = false;
-        for arg in &args {
+        // File name is optional
+        let mut file_name: Option<String> = None;
+
+        // let mut index = 0;
+
+        for (index, arg) in args.iter().enumerate() {
             if arg == "--quiet" || arg == "-q" {
                 quiet = true;
             }
@@ -62,10 +81,16 @@ pub mod cli {
             if arg == "--help" || arg == "-h" {
                 help = true;
             }
+
+            if arg == "--file" || arg == "-f" {
+                file_name = Some(args[index+1].to_string());
+            }
+
+            // index += 1;
         }
 
         if help {
-            return Config::new(0, false, false, true);
+            return Config::new(0, false, false, true, None);
         }
 
         let number: String = match args.last() {
@@ -74,14 +99,13 @@ pub mod cli {
         };
 
         let number: u64 = match number.trim().parse() {
-            Ok( num ) => num,
+            Ok(num) => num,
             Err(_) => {
                 eprintln!("Thou must enter your number last!");
                 process::exit(64);
-            },
+            }
         };
 
-        Config::new(number, count, quiet, help)
-
+        Config::new(number, count, quiet, help, file_name)
     }
 }
