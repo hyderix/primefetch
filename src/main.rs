@@ -8,16 +8,23 @@ use primefetch::config::Config;
 use primefetch::cli::{print_help,gen_config};
 
 fn check_primality(config: &Config) {
-    if is_prime(config.get_number()) {
+    let number = match config.get_number() {
+        Some(num) => num,
+        None => {
+            eprintln!("An error occured, no number in Config struct");
+            process::exit(64);
+        }
+    };
+    if is_prime(number) {
         if !config.quiet {
-            println!("{} is PRIME!", config.get_number());
+            println!("{} is PRIME!", number);
         }
         process::exit(0);
     } else {
         if config.quiet {
             process::exit(1);
         } else {
-            println!("{} is NOT PRIME!", config.get_number());
+            println!("{} is NOT PRIME!", number);
             process::exit(0);
         }
     }
@@ -49,13 +56,14 @@ fn main() {
         print_help();
     }
 
+    let number = match config.get_number() {
+        Some(num) => num,
+        None => 0_u64
+    };
+
     if !config.until_mode {
-
         check_primality(&config);
-
     } else {
-        
-        check_until(config.get_number());
-
+        check_until(number);
     }
 }

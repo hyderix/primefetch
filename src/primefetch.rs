@@ -1,24 +1,18 @@
 pub mod config {
     pub struct Config {
-        number: u64,
+        number: Option<u64>,
         pub until_mode: bool,
         pub quiet: bool,
         pub help: bool,
-        file_name: String,
+        file_name: Option<String>,
     }
     impl Config {
         pub fn new(
-            number: u64, until_mode: bool,
+            number: Option<u64>, until_mode: bool,
             quiet: bool,
             help: bool,
             file_name: Option<String>,
         ) -> Config {
-            let file_name: String = match file_name {
-                Some(string) => string,
-                _ => {
-                    todo!()
-                }
-            };
             Config {
                 number,
                 until_mode,
@@ -28,7 +22,7 @@ pub mod config {
             }
         }
 
-        pub fn get_number(&self) -> u64 {
+        pub fn get_number(&self) -> Option<u64> {
             self.number
         }
     }
@@ -38,9 +32,9 @@ pub mod cli {
     pub fn print_help() {
         use std::process;
         print!(
-            "primefetch [OPTIONS] [NUMBER]
+            "primefetch [OPTIONS] [NUMBER|FILE PATH]
 
-        Perform checks on numbers regarding primality.
+        Perform operations and checks on numbers regarding primality.
         
         OPTIONS:
         
@@ -67,8 +61,6 @@ pub mod cli {
         // File name is optional
         let mut file_name: Option<String> = None;
 
-        // let mut index = 0;
-
         for (index, arg) in args.iter().enumerate() {
             if arg == "--quiet" || arg == "-q" {
                 quiet = true;
@@ -83,23 +75,29 @@ pub mod cli {
             }
 
             if arg == "--file" || arg == "-f" {
+                if index >= args.len() {
+                    eprintln!("You must provide a file name!");
+                    process::exit(64);
+                }
                 file_name = Some(args[index+1].to_string());
+                println!("{:?}", &file_name)
             }
 
-            // index += 1;
         }
 
         if help {
-            return Config::new(0, false, false, true, None);
+            // Return config with help
+            return Config::new(None, false, false, true, None);
         }
+
 
         let number: String = match args.last() {
             Some(a) => a.to_string(),
-            None => panic!("Args are empty"),
+            None => {eprintln!("Args are empty"); process::exit(64)},
         };
 
-        let number: u64 = match number.trim().parse() {
-            Ok(num) => num,
+        let number: Option<u64> = match number.trim().parse() {
+            Ok(num) => Some(num),
             Err(_) => {
                 eprintln!("Thou must enter your number last!");
                 process::exit(64);
