@@ -1,12 +1,13 @@
 mod primality;
 mod primefetch;
 
-use std::{env,process};
+use std::{env, process};
 
 use primality::utils::is_prime;
-use primefetch::config::Config;
-use primefetch::cli::{print_help,gen_config};
 use primality::utils::next_prime;
+use primefetch::cli::{gen_config, print_help};
+use primefetch::cli_utils::check_until;
+use primefetch::config::Config;
 
 fn check_primality(config: &Config) {
     let number = match config.get_number() {
@@ -21,28 +22,17 @@ fn check_primality(config: &Config) {
             println!("{} is PRIME!", number);
         }
         process::exit(0);
+    } else if config.quiet {
+        process::exit(1);
     } else {
-        if config.quiet {
-            process::exit(1);
-        } else {
-            println!("{} is NOT PRIME! Next prime is {}", number, next_prime(number));
-            process::exit(0);
-        }
+        println!(
+            "{} is NOT PRIME! Next prime is {}",
+            number,
+            next_prime(number)
+        );
+        process::exit(0);
     }
 }
-
-fn check_until(number: u64) {
-    let mut count = 0;
-    for i in 2..number {
-        if is_prime(i) {
-            println!("{}", i);
-            count += 1;
-        }
-    }
-
-    eprintln!("{} primes found until {}", count, number);
-}
-
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -57,14 +47,15 @@ fn main() {
         print_help();
     }
 
-    let number = match config.get_number() {
-        Some(num) => num,
-        None => 0_u64
-    };
+    let number: u64 = config.get_number().unwrap_or(0_u64);
 
     if !config.until_mode {
         check_primality(&config);
     } else {
-        check_until(number);
+        let result = check_until(number);
+        for res in result.get_primes().iter() {
+            println!("{}", res);
+        }
+        eprintln!("{} primes found until {}.", result.get_count(), result.get_num());
     }
 }

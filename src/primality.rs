@@ -2,7 +2,7 @@ pub mod utils {
     pub fn is_prime(n: u64) -> bool {
         let mut a = 1;
         let largest = loop {
-            if a*a > n {
+            if a * a > n {
                 break a;
             } else {
                 a += 1;
@@ -32,7 +32,7 @@ pub mod utils {
 
     pub fn previous_prime(number: u64) -> Option<u64> {
         if number < 2 {
-            return None
+            return None;
         }
         let mut counter = number;
         loop {
@@ -46,7 +46,7 @@ pub mod utils {
 
 #[cfg(test)]
 mod test {
-    use crate::primality::utils::{is_prime,next_prime,previous_prime};
+    use crate::primality::utils::{is_prime, next_prime, previous_prime};
 
     #[test]
     fn test_is_prime() {
@@ -62,7 +62,7 @@ mod test {
         assert_eq!(next_prime(17), 17);
         assert_eq!(next_prime(18809394909), 18809394911);
     }
-    
+
     #[test]
     fn test_prev_prime() {
         assert_eq!(previous_prime(20), Some(19));

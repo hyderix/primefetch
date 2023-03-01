@@ -8,7 +8,8 @@ pub mod config {
     }
     impl Config {
         pub fn new(
-            number: Option<u64>, until_mode: bool,
+            number: Option<u64>,
+            until_mode: bool,
             quiet: bool,
             help: bool,
             file_name: Option<String>,
@@ -79,10 +80,9 @@ pub mod cli {
                     eprintln!("You must provide a file name!");
                     process::exit(64);
                 }
-                file_name = Some(args[index+1].to_string());
+                file_name = Some(args[index + 1].to_string());
                 println!("{:?}", &file_name)
             }
-
         }
 
         if help {
@@ -90,10 +90,12 @@ pub mod cli {
             return Config::new(None, false, false, true, None);
         }
 
-
         let number: String = match args.last() {
             Some(a) => a.to_string(),
-            None => {eprintln!("Args are empty"); process::exit(64)},
+            None => {
+                eprintln!("Args are empty");
+                process::exit(64)
+            }
         };
 
         let number: Option<u64> = match number.trim().parse() {
@@ -105,5 +107,41 @@ pub mod cli {
         };
 
         Config::new(number, count, quiet, help, file_name)
+    }
+}
+
+pub mod cli_utils {
+
+    use crate::primality::utils::is_prime;
+
+    pub struct PrimesUntil {
+        num: u64,
+        primes_until: Vec<u64>,
+        count: u64,
+    }
+
+    impl PrimesUntil {
+        pub fn get_count(&self) -> u64 {
+            self.count
+        }
+        pub fn get_num(&self) -> u64 {
+            self.num
+        }
+        pub fn get_primes(&self) -> &Vec<u64> {
+            &self.primes_until
+        }
+    }
+
+    pub fn check_until(num: u64) -> PrimesUntil {
+        let mut count: u64 = 0;
+        let mut result_vec: Vec<u64> = vec![];
+        for i in (1..num).step_by(2) {
+            if is_prime(i) {
+                result_vec.push(i);
+                count += 1;
+            }
+        }
+
+        PrimesUntil { num , primes_until: result_vec, count }
     }
 }
