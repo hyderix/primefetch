@@ -6,6 +6,7 @@ use std::{env,process};
 use primality::utils::is_prime;
 use primefetch::config::Config;
 use primefetch::cli::{print_help,gen_config};
+use primality::utils::next_prime;
 
 fn check_primality(config: &Config) {
     let number = match config.get_number() {
@@ -24,7 +25,7 @@ fn check_primality(config: &Config) {
         if config.quiet {
             process::exit(1);
         } else {
-            println!("{} is NOT PRIME!", number);
+            println!("{} is NOT PRIME! Next prime is {}", number, next_prime(number));
             process::exit(0);
         }
     }
