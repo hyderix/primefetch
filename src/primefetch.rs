@@ -4,6 +4,7 @@ pub mod config {
         pub until_mode: bool,
         pub quiet: bool,
         pub help: bool,
+        pub color: bool,
         file_name: Option<String>,
     }
     impl Config {
@@ -12,6 +13,7 @@ pub mod config {
             until_mode: bool,
             quiet: bool,
             help: bool,
+            color: bool,
             file_name: Option<String>,
         ) -> Config {
             Config {
@@ -19,6 +21,7 @@ pub mod config {
                 until_mode,
                 quiet,
                 help,
+                color,
                 file_name,
             }
         }
@@ -86,6 +89,8 @@ pub mod cli {
         let mut help: bool = false;
         // File name is optional
         let mut file_name: Option<String> = None;
+        // Color can be turned off
+        let mut color: bool = true;
 
         for (index, arg) in args.iter().enumerate() {
             if arg == "--quiet" || arg == "-q" {
@@ -106,13 +111,17 @@ pub mod cli {
                     process::exit(64);
                 }
                 file_name = Some(args[index + 1].to_string());
-                println!("{:?}", &file_name)
+                // dbg!("{:?}", &file_name)
+            }
+
+            if arg == "--no-color" || arg == "-n" {
+                color = false;
             }
         }
 
         if help {
             // Return config with help
-            return Config::new(None, false, false, true, None);
+            return Config::new(None, false, false, true, false,  None);
         }
 
         let number: String = match args.last() {
@@ -131,7 +140,7 @@ pub mod cli {
             }
         };
 
-        Config::new(number, count, quiet, help, file_name)
+        Config::new(number, count, quiet, help, color, file_name)
     }
 }
 
@@ -170,23 +179,47 @@ pub mod cli_utils {
         PrimesUntil { num , primes_until: result_vec, count }
     }
 
-    pub fn format_strings(number: u64) -> Vec<String> {
-        let mut res: Vec<String> = vec![];
+    use colored::Colorize;
+    pub fn format_strings(number: u64, color: bool) -> Vec<String> {
+        if color {
+            let mut res: Vec<String> = vec![];
 
-        res.push(format!("Number: {}", number));
+            let number_line: String = format!("{} {}", "Number:".bold() , number.to_string().cyan());
+            res.push(number_line);
 
-        if is_prime(number) {
-            res.push("Primality: PRIME".to_string());
+            if is_prime(number) {
+                res.push(format!("{} {}", "Primality:".bold(), "PRIME".green().bold()));
+            } else {
+                res.push(format!("{} {}", "Primality:".bold(), "NOT PRIME".red().bold()));
+            }
+
+            res.push(format!("{} {}", "Next prime:".bold(), next_prime(number).to_string().yellow()));
+            res.push(format!("{}: {}", "Previous prime".bold(),  match previous_prime(number) {
+                Some(num) => num.to_string(),
+                None => "None".to_string(),
+            }.yellow()));
+
+            res
         } else {
-            res.push("Primality: NOT PRIME".to_string());
+            let mut res: Vec<String> = vec![];
+
+            let number_line: String = format!("Number: {}" , number);
+            res.push(number_line);
+
+            if is_prime(number) {
+                res.push("Primality: PRIME".to_string());
+            } else {
+                res.push("Primality: NOT PRIME".to_string());
+            }
+
+            res.push(format!("Next prime: {}", next_prime(number)));
+            res.push(format!("Previous prime: {}", match previous_prime(number) {
+                Some(num) => num.to_string(),
+                None => "None available".to_string(),
+            }));
+
+            res
         }
 
-        res.push(format!("Next prime: {}", next_prime(number)));
-        res.push(format!("Previous prime: {}", match previous_prime(number) {
-            Some(num) => num.to_string(),
-            None => "None available".to_string(),
-        }));
-
-        res
     }
 }

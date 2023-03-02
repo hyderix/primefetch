@@ -25,7 +25,7 @@ fn main() {
     if !config.until_mode {
         // check_primality(&config);
         
-        for string in format_strings(number).iter() {
+        for string in format_strings(number, config.color).iter() {
             println!("{}", string);
         }
     } else {
