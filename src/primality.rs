@@ -1,11 +1,11 @@
 pub mod utils {
     pub fn is_prime(n: u64) -> bool {
-        if n < 2 {
+        if n == 1 || n == 0 {
             return false
         }
 
-        if n % 2 == 0 {
-            return false;
+        if n % 2 == 0 && n != 2 {
+            return false
         }
 
         let mut a = 1;

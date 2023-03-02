@@ -39,9 +39,9 @@ pub mod config {
             // }
         // }
 // 
-        pub fn get_number(&self) -> Option<u64> {
-            self.number
-        }
+        // pub fn get_number(&self) -> Option<u64> {
+            // self.number
+        // }
     }
 }
 
