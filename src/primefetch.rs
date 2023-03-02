@@ -1,31 +1,44 @@
+
 pub mod config {
+    use clap::Parser;
+    #[derive(Parser)]
+    #[command(author, version)]
     pub struct Config {
-        number: Option<u64>,
-        pub until_mode: bool,
+        pub number: Option<u64>,
+        #[arg(long, value_name = "NUMBER")]
+        pub count_to: bool,
+
+        #[arg(long, short)]
         pub quiet: bool,
-        pub help: bool,
+
+        // #[arg(short, long)]
+        // pub help: bool,
+
+        #[arg(long)]
         pub color: bool,
-        file_name: Option<String>,
+
+        #[arg(long, short, value_name = "FILE")]
+        pub file_name: Option<String>,
     }
     impl Config {
-        pub fn new(
-            number: Option<u64>,
-            until_mode: bool,
-            quiet: bool,
-            help: bool,
-            color: bool,
-            file_name: Option<String>,
-        ) -> Config {
-            Config {
-                number,
-                until_mode,
-                quiet,
-                help,
-                color,
-                file_name,
-            }
-        }
-
+        // pub fn new(
+            // number: Option<u64>,
+            // count_to: bool,
+            // quiet: bool,
+            // help: bool,
+            // color: bool,
+            // file_name: Option<String>,
+        // ) -> Config {
+            // Config {
+                // number,
+                // count_to,
+                // quiet,
+                // help,
+                // color,
+                // file_name,
+            // }
+        // }
+// 
         pub fn get_number(&self) -> Option<u64> {
             self.number
         }
@@ -37,7 +50,7 @@ pub mod cli {
     use crate::primality::utils::next_prime; 
 
     pub fn check_primality(config: &Config) {
-        let number = match config.get_number() {
+        let number = match config.number {
             Some(num) => num,
             None => {
                 eprintln!("An error occured, no number in Config struct");
@@ -121,7 +134,7 @@ pub mod cli {
 
         if help {
             // Return config with help
-            return Config::new(None, false, false, true, false,  None);
+            return Config{number: None, count_to: false, quiet: false, color: false,  file_name: None}
         }
 
         let number: String = match args.last() {
@@ -140,7 +153,7 @@ pub mod cli {
             }
         };
 
-        Config::new(number, count, quiet, help, color, file_name)
+        Config {number, count_to: count, quiet, color, file_name}
     }
 }
 
