@@ -1,4 +1,3 @@
-
 pub mod config {
     use clap::Parser;
     #[derive(Parser)]
@@ -13,7 +12,6 @@ pub mod config {
 
         // #[arg(short, long)]
         // pub help: bool,
-
         #[arg(long)]
         pub color: bool,
 
@@ -22,25 +20,25 @@ pub mod config {
     }
     impl Config {
         // pub fn new(
-            // number: Option<u64>,
-            // count_to: bool,
-            // quiet: bool,
-            // help: bool,
-            // color: bool,
-            // file_name: Option<String>,
+        // number: Option<u64>,
+        // count_to: bool,
+        // quiet: bool,
+        // help: bool,
+        // color: bool,
+        // file_name: Option<String>,
         // ) -> Config {
-            // Config {
-                // number,
-                // count_to,
-                // quiet,
-                // help,
-                // color,
-                // file_name,
-            // }
+        // Config {
+        // number,
+        // count_to,
+        // quiet,
+        // help,
+        // color,
+        // file_name,
         // }
-// 
+        // }
+        //
         // pub fn get_number(&self) -> Option<u64> {
-            // self.number
+        // self.number
         // }
     }
 }
@@ -78,7 +76,11 @@ pub mod cli_utils {
             }
         }
 
-        PrimesUntil { num , primes_until: result_vec, count }
+        PrimesUntil {
+            num,
+            primes_until: result_vec,
+            count,
+        }
     }
 
     use colored::Colorize;
@@ -86,26 +88,43 @@ pub mod cli_utils {
         if color {
             let mut res: Vec<String> = vec![];
 
-            let number_line: String = format!("{} {}", "Number:".bold() , number.to_string().cyan());
+            let number_line: String = format!("{} {}", "Number:".bold(), number.to_string().cyan());
             res.push(number_line);
 
             if is_prime(number) {
-                res.push(format!("{} {}", "Primality:".bold(), "PRIME".green().bold()));
+                res.push(format!(
+                    "{} {}",
+                    "Primality:".bold(),
+                    "PRIME".green().bold()
+                ));
             } else {
-                res.push(format!("{} {}", "Primality:".bold(), "NOT PRIME".red().bold()));
+                res.push(format!(
+                    "{} {}",
+                    "Primality:".bold(),
+                    "NOT PRIME".red().bold()
+                ));
             }
 
-            res.push(format!("{} {}", "Next prime:".bold(), next_prime(number).to_string().yellow()));
-            res.push(format!("{}: {}", "Previous prime".bold(),  match previous_prime(number) {
-                Some(num) => num.to_string(),
-                None => "None".to_string(),
-            }.yellow()));
+            res.push(format!(
+                "{} {}",
+                "Next prime:".bold(),
+                next_prime(number).to_string().yellow()
+            ));
+            res.push(format!(
+                "{}: {}",
+                "Previous prime".bold(),
+                match previous_prime(number) {
+                    Some(num) => num.to_string(),
+                    None => "None".to_string(),
+                }
+                .yellow()
+            ));
 
             res
         } else {
             let mut res: Vec<String> = vec![];
 
-            let number_line: String = format!("Number: {}" , number);
+            let number_line: String = format!("Number: {}", number);
             res.push(number_line);
 
             if is_prime(number) {
@@ -115,10 +134,13 @@ pub mod cli_utils {
             }
 
             res.push(format!("Next prime: {}", next_prime(number)));
-            res.push(format!("Previous prime: {}", match previous_prime(number) {
-                Some(num) => num.to_string(),
-                None => "None available".to_string(),
-            }));
+            res.push(format!(
+                "Previous prime: {}",
+                match previous_prime(number) {
+                    Some(num) => num.to_string(),
+                    None => "None available".to_string(),
+                }
+            ));
 
             res
         }

@@ -1,11 +1,11 @@
 pub mod utils {
     pub fn is_prime(n: u64) -> bool {
         if n == 1 || n == 0 {
-            return false
+            return false;
         }
 
         if n % 2 == 0 && n != 2 {
-            return false
+            return false;
         }
 
         let mut a = 1;
@@ -29,7 +29,7 @@ pub mod utils {
     }
 
     pub fn next_prime(number: u64) -> u64 {
-        let mut counter = number+1;
+        let mut counter = number + 1;
         loop {
             if is_prime(counter) {
                 break counter;
@@ -42,7 +42,7 @@ pub mod utils {
         if number < 2 {
             return None;
         }
-        let mut counter = number-1;
+        let mut counter = number - 1;
         loop {
             if is_prime(counter) {
                 break Some(counter);
