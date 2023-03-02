@@ -1,9 +1,6 @@
 mod primality;
 mod primefetch;
 
-use std::{env, process};
-
-use primefetch::cli::{gen_config, print_help, check_primality};
 use primefetch::config::Config;
 use primefetch::cli_utils::{check_until, format_strings};
 

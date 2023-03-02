@@ -45,118 +45,6 @@ pub mod config {
     }
 }
 
-pub mod cli {
-    use std::process;
-    use crate::primality::utils::next_prime; 
-
-    pub fn check_primality(config: &Config) {
-        let number = match config.number {
-            Some(num) => num,
-            None => {
-                eprintln!("An error occured, no number in Config struct");
-                process::exit(64);
-            }
-        };
-        if is_prime(number) {
-            if !config.quiet {
-                println!("{} is PRIME!", number);
-            }
-            process::exit(0);
-        } else if config.quiet {
-            process::exit(1);
-        } else {
-            println!(
-                "{} is NOT PRIME! Next prime is {}",
-                number,
-                next_prime(number)
-            );
-            process::exit(0);
-        }
-    }
-
-    pub fn print_help() {
-        print!(
-            "primefetch [OPTIONS] [NUMBER|FILE PATH]
-
-        Perform operations and checks on numbers regarding primality.
-        OPTIONS:
-        
-        --help, -h - Show this help.
-        --quiet, -q - Do not output anything unneccesary.
-        --count-to - Count from 2 to NUMBER instead of checking NUMBER for primality.
-        --file, -f <FILE> - Read lines from <FILE> and output only the prime numbers.
-        \n"
-        );
-
-        process::exit(0);
-    }
-
-    use crate::{primefetch::config::Config, primality::utils::is_prime};
-    pub fn gen_config(args: Vec<String>) -> Config {
-
-        // Quiet mode - YES or nah
-        let mut quiet: bool = false;
-        // Count to a number, or check the number - that's the question
-        let mut count: bool = false;
-        // To help, or to not help
-        let mut help: bool = false;
-        // File name is optional
-        let mut file_name: Option<String> = None;
-        // Color can be turned off
-        let mut color: bool = true;
-
-        for (index, arg) in args.iter().enumerate() {
-            if arg == "--quiet" || arg == "-q" {
-                quiet = true;
-            }
-
-            if arg == "--count-to" {
-                count = true;
-            }
-
-            if arg == "--help" || arg == "-h" {
-                help = true;
-            }
-
-            if arg == "--file" || arg == "-f" {
-                if index >= args.len() {
-                    eprintln!("You must provide a file name!");
-                    process::exit(64);
-                }
-                file_name = Some(args[index + 1].to_string());
-                // dbg!("{:?}", &file_name)
-            }
-
-            if arg == "--no-color" || arg == "-n" {
-                color = false;
-            }
-        }
-
-        if help {
-            // Return config with help
-            return Config{number: None, count_to: false, quiet: false, color: false,  file_name: None}
-        }
-
-        let number: String = match args.last() {
-            Some(a) => a.to_string(),
-            None => {
-                eprintln!("Args are empty");
-                process::exit(64)
-            }
-        };
-
-        let number: Option<u64> = match number.trim().parse() {
-            Ok(num) => Some(num),
-            Err(_) => {
-                eprintln!("Thou must enter your number last!");
-                process::exit(64);
-            }
-        };
-
-        Config {number, count_to: count, quiet, color, file_name}
-    }
-}
-
 pub mod cli_utils {
 
     use crate::primality::utils::{is_prime, next_prime, previous_prime};
@@ -182,7 +70,8 @@ pub mod cli_utils {
     pub fn check_until(num: u64) -> PrimesUntil {
         let mut count: u64 = 0;
         let mut result_vec: Vec<u64> = vec![];
-        for i in (1..num).step_by(2) {
+        result_vec.push(2_u64);
+        for i in (3..num).step_by(2) {
             if is_prime(i) {
                 result_vec.push(i);
                 count += 1;
@@ -233,6 +122,5 @@ pub mod cli_utils {
 
             res
         }
-
     }
 }
