@@ -30,13 +30,39 @@ pub mod config {
 }
 
 pub mod cli {
+    use std::process;
+    use crate::primality::utils::next_prime; 
+
+    pub fn check_primality(config: &Config) {
+        let number = match config.get_number() {
+            Some(num) => num,
+            None => {
+                eprintln!("An error occured, no number in Config struct");
+                process::exit(64);
+            }
+        };
+        if is_prime(number) {
+            if !config.quiet {
+                println!("{} is PRIME!", number);
+            }
+            process::exit(0);
+        } else if config.quiet {
+            process::exit(1);
+        } else {
+            println!(
+                "{} is NOT PRIME! Next prime is {}",
+                number,
+                next_prime(number)
+            );
+            process::exit(0);
+        }
+    }
+
     pub fn print_help() {
-        use std::process;
         print!(
             "primefetch [OPTIONS] [NUMBER|FILE PATH]
 
         Perform operations and checks on numbers regarding primality.
-        
         OPTIONS:
         
         --help, -h - Show this help.
@@ -49,9 +75,8 @@ pub mod cli {
         process::exit(0);
     }
 
-    use crate::primefetch::config::Config;
+    use crate::{primefetch::config::Config, primality::utils::is_prime};
     pub fn gen_config(args: Vec<String>) -> Config {
-        use std::process;
 
         // Quiet mode - YES or nah
         let mut quiet: bool = false;
@@ -112,7 +137,7 @@ pub mod cli {
 
 pub mod cli_utils {
 
-    use crate::primality::utils::is_prime;
+    use crate::primality::utils::{is_prime, next_prime, previous_prime};
 
     pub struct PrimesUntil {
         num: u64,
@@ -143,5 +168,25 @@ pub mod cli_utils {
         }
 
         PrimesUntil { num , primes_until: result_vec, count }
+    }
+
+    pub fn format_strings(number: u64) -> Vec<String> {
+        let mut res: Vec<String> = vec![];
+
+        res.push(format!("Number: {}", number));
+
+        if is_prime(number) {
+            res.push("Primality: PRIME".to_string());
+        } else {
+            res.push("Primality: NOT PRIME".to_string());
+        }
+
+        res.push(format!("Next prime: {}", next_prime(number)));
+        res.push(format!("Previous prime: {}", match previous_prime(number) {
+            Some(num) => num.to_string(),
+            None => "None available".to_string(),
+        }));
+
+        res
     }
 }
