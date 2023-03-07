@@ -18,29 +18,6 @@ pub mod config {
         #[arg(long, short, value_name = "FILE")]
         pub file_name: Option<String>,
     }
-    impl Config {
-        // pub fn new(
-        // number: Option<u64>,
-        // count_to: bool,
-        // quiet: bool,
-        // help: bool,
-        // color: bool,
-        // file_name: Option<String>,
-        // ) -> Config {
-        // Config {
-        // number,
-        // count_to,
-        // quiet,
-        // help,
-        // color,
-        // file_name,
-        // }
-        // }
-        //
-        // pub fn get_number(&self) -> Option<u64> {
-        // self.number
-        // }
-    }
 }
 
 pub mod cli_utils {
