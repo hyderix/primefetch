@@ -9,3 +9,6 @@ edition = "2021"
 clap = { version = "4.1.8", features = ["derive"] }
 colored="2"
 supports-color="2"
+
+# [profile.release]
+# debug = true
