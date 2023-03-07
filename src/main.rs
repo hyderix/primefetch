@@ -9,11 +9,9 @@ use clap::Parser;
 fn main() {
     let config = Config::parse();
 
-    let number: u64 = config.number.unwrap_or(0);
+    let number: u64 = config.number.expect("No number provided");
 
     if !config.count_to {
-        // check_primality(&config);
-
         for string in format_strings(number, config.color).iter() {
             println!("{}", string);
         }
