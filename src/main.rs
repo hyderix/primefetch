@@ -7,18 +7,6 @@ use primefetch::config::Config;
 use clap::Parser;
 
 fn main() {
-    // let args: Vec<String> = env::args().collect();
-    // if args.len() < 2 {
-    // eprintln!("Too few arguments!");
-    // process::exit(64);
-    // }
-    //
-    // let config = gen_config(args);
-    //
-    // if config.help {
-    // print_help();
-    // }
-
     let config = Config::parse();
 
     let number: u64 = config.number.unwrap_or(0);
