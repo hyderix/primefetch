@@ -22,7 +22,36 @@ pub mod config {
 
 pub mod cli_utils {
 
+    use std::error::Error;
+
     use crate::primality::utils::{is_prime, next_prime, previous_prime};
+    use crate::primefetch::config::Config;
+
+
+    pub fn primefetch(config: Config) -> Result<(), Box<dyn Error>> {
+        let number = match config.number {
+            Some(num) => num,
+            None => {0_u64}
+        };
+
+        if !config.count_to {
+            for string in format_strings(number, config.color).iter() {
+                println!("{}", string);
+            }
+        } else {
+            let result = check_until(number);
+            for res in result.get_primes().iter() {
+                println!("{}", res);
+            }
+            eprintln!(
+                "{} primes found until {}.",
+                result.get_count(),
+                result.get_num()
+            );
+        }
+
+        Ok(())
+    }
 
     pub struct PrimesUntil {
         num: u64,
@@ -61,6 +90,7 @@ pub mod cli_utils {
     }
 
     use colored::Colorize;
+
     pub fn format_strings(number: u64, color: bool) -> Vec<String> {
         if color {
             let mut res: Vec<String> = vec![];
