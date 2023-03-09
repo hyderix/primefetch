@@ -1,18 +1,23 @@
 mod primality;
 mod primefetch;
 
+use std::process::exit;
+
 use primefetch::config::Config;
 
 use clap::Parser;
 
-use std::io::Result;
-
 use primefetch::cli_utils::primefetch;
 
-fn main() -> Result<()> {
+fn main() {
     let config = Config::parse();
 
-    primefetch(config);
+    match primefetch(config) {
+        Ok(_) => {},
+        Err(_) => {
+            eprintln!("An error occurred in program");
+            exit(1);
+        },
+    }
 
-    Ok(())
 }
