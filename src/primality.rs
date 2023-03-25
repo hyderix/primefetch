@@ -8,6 +8,18 @@ pub mod utils {
             return false;
         }
 
+        let largest_num_tested: u64 = integer_square_root(n);
+
+        for num in 2..largest_num_tested {
+            if n % num == 0 {
+                return false;
+            }
+        };
+
+        true
+    }
+
+    fn integer_square_root(n: u64) -> u64 {
         let mut a = 1;
         let largest = loop {
             if a * a > n {
@@ -17,15 +29,8 @@ pub mod utils {
             }
         };
 
-        let largest_num_tested: u64 = largest;
-
-        for num in 2..largest_num_tested {
-            if n % num == 0 {
-                return false;
-            }
-        }
-
-        true
+        largest
+        
     }
 
     pub fn next_prime(number: u64) -> u64 {
@@ -50,11 +55,25 @@ pub mod utils {
             counter -= 1;
         }
     }
+
+    pub fn prime_factors(number: u64) -> Vec<u64> {
+        let largest_num_tested = integer_square_root(number);
+        let mut res_vector: Vec<u64> = vec![];
+
+        for num in 2..largest_num_tested {
+            if number % num == 0 {
+                res_vector.push(num);
+            }
+        }
+
+        res_vector
+    }
 }
 
 #[cfg(test)]
 mod test {
-    use crate::primality::utils::{is_prime, next_prime, previous_prime};
+    use crate::primality::utils::{is_prime, next_prime, previous_prime, prime_factors};
+
 
     #[test]
     fn test_is_prime() {
@@ -79,5 +98,11 @@ mod test {
         assert_eq!(previous_prime(20), Some(19));
         assert_eq!(previous_prime(3), Some(2));
         assert_eq!(previous_prime(1), None);
+    }
+
+    #[test]
+    fn test_prime_factors() {
+        assert_eq!(prime_factors(6), vec![2, 3]);
+        assert_eq!(prime_factors(15), vec![3, 5])
     }
 }
