@@ -1,4 +1,4 @@
-name: "Build legacy Nix package on Ubuntu"
+name: "Build and test Nix package on Ubuntu"
 
 on:
   push:
@@ -12,3 +12,11 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@v9
       - name: Building Nix package
         run: nix build .
+
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v9
+      - name: Test code
+        run: nix develop --command 'cargo test'
