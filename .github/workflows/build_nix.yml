@@ -5,18 +5,14 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  test-and-build:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v9
+      - name: checkout repo
+        uses: actions/checkout@v4
+      - name: install nix
+        uses: DeterminateSystems/nix-installer-action@v9
+      - name: Test code
+        run: nix develop --command cargo test
       - name: Building Nix package
         run: nix build .
-
-  test:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v9
-      - name: Test code
-        run: nix develop --command 'cargo test'
