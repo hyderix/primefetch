@@ -16,7 +16,7 @@
       {
         defaultPackage = naersk-lib.buildPackage ./.;
         devShell = with pkgs; mkShell {
-          buildInputs = [ cargo rustc rustfmt pre-commit rustPackages.clippy helix rust-analyzer ];
+          buildInputs = [ cargo rustc rustfmt pre-commit rustPackages.clippy helix rust-analyzer nil ];
           RUST_SRC_PATH = rustPlatform.rustLibSrc;
         };
       });
