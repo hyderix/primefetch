@@ -13,11 +13,10 @@ fn main() {
     let config = Config::parse();
 
     match primefetch(config) {
-        Ok(_) => {},
+        Ok(_) => {}
         Err(_) => {
             eprintln!("An error occurred in program");
             exit(1);
-        },
+        }
     }
-
 }

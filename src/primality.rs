@@ -14,7 +14,7 @@ pub mod utils {
             if n % num == 0 {
                 return false;
             }
-        };
+        }
 
         true
     }
@@ -30,7 +30,6 @@ pub mod utils {
         };
 
         largest
-        
     }
 
     pub fn next_prime(number: u64) -> u64 {
@@ -57,10 +56,10 @@ pub mod utils {
     }
 
     pub fn prime_factors(number: u64) -> Vec<u64> {
-        let largest_num_tested = integer_square_root(number);
+        let largest_num_tested = integer_square_root(number) + 1;
         let mut res_vector: Vec<u64> = vec![];
 
-        for num in 2..largest_num_tested {
+        for num in 2..=largest_num_tested {
             if number % num == 0 {
                 res_vector.push(num);
             }
@@ -73,7 +72,6 @@ pub mod utils {
 #[cfg(test)]
 mod test {
     use crate::primality::utils::{is_prime, next_prime, previous_prime, prime_factors};
-
 
     #[test]
     fn test_is_prime() {
@@ -102,7 +100,11 @@ mod test {
 
     #[test]
     fn test_prime_factors() {
-        assert_eq!(prime_factors(6), vec![2, 3]);
-        assert_eq!(prime_factors(15), vec![3, 5])
+        let factor_six = prime_factors(6);
+        let factor_fifteen = prime_factors(15);
+        dbg!(&factor_six);
+        dbg!(&factor_fifteen);
+        assert_eq!(factor_six, vec![2, 3]);
+        assert_eq!(factor_fifteen, vec![3, 5])
     }
 }
