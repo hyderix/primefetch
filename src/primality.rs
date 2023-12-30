@@ -56,14 +56,23 @@ pub mod utils {
     }
 
     pub fn prime_factors(number: u64) -> Vec<u64> {
+        let mut number_check = number;
         let largest_num_tested = integer_square_root(number) + 1;
+        dbg!(&largest_num_tested);
         let mut res_vector: Vec<u64> = vec![];
 
         for num in 2..=largest_num_tested {
-            if number % num == 0 {
+            while (number_check % num == 0) {
                 res_vector.push(num);
+                number_check = number_check / num;
             }
         }
+
+        if number_check > 1 {
+            res_vector.push(number_check);
+        }
+
+        dbg!(&res_vector);
 
         res_vector
     }
