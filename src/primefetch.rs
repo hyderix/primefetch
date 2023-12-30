@@ -27,14 +27,14 @@ pub mod cli_utils {
 
     use std::error::Error;
 
-    use crate::primality::utils::{is_prime, next_prime, previous_prime};
+    use crate::primality::utils::{is_prime, next_prime, previous_prime, prime_factors};
     use crate::primefetch::config::Config;
 
     pub fn primefetch(config: Config) -> Result<(), Box<dyn Error>> {
         let number = config.number.unwrap_or(0_u64);
 
         if !config.count_to {
-            for string in format_strings(number, config.color).iter() {
+            for string in format_strings(number, config.color, config.show_prime_factors).iter() {
                 println!("{}", string);
             }
         } else {
@@ -90,7 +90,7 @@ pub mod cli_utils {
 
     use colored::Colorize;
 
-    pub fn format_strings(number: u64, color: bool) -> Vec<String> {
+    pub fn format_strings(number: u64, color: bool, show_factors: bool) -> Vec<String> {
         if color {
             let mut res: Vec<String> = vec![];
 
@@ -126,6 +126,18 @@ pub mod cli_utils {
                 .yellow()
             ));
 
+            if show_factors {
+                res.push(format!(
+                    "{}: {}",
+                    "Prime factors".bold(),
+                    prime_factors(number)
+                        .iter()
+                        .map(|n| n.to_string())
+                        .collect::<Vec<String>>()
+                        .join(" ")
+                ));
+            }
+
             res
         } else {
             let mut res: Vec<String> = vec![];
@@ -147,6 +159,18 @@ pub mod cli_utils {
                     None => "None available".to_string(),
                 }
             ));
+
+            if show_factors {
+                res.push(format!(
+                    "{}: {}",
+                    "Prime factors",
+                    prime_factors(number)
+                        .iter()
+                        .map(|n| n.to_string())
+                        .collect::<Vec<String>>()
+                        .join(" ")
+                ));
+            }
 
             res
         }
