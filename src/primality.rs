@@ -104,7 +104,7 @@ mod test {
         let factor_fifteen = prime_factors(15);
         let factor_large = prime_factors(149805493);
         assert_eq!(factor_six, vec![2, 3]);
-        assert_eq!(factor_fifteen, vec![3, 5])
-        assert_eq!(factor_large, vec![1789, 83737])
+        assert_eq!(factor_fifteen, vec![3, 5]);
+        assert_eq!(factor_large, vec![1789, 83737]);
     }
 }
