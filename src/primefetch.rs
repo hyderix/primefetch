@@ -31,10 +31,7 @@ pub mod cli_utils {
     use crate::primefetch::config::Config;
 
     pub fn primefetch(config: Config) -> Result<(), Box<dyn Error>> {
-        let number = match config.number {
-            Some(num) => num,
-            None => 0_u64,
-        };
+        let number = config.number.unwrap_or(0_u64);
 
         if !config.count_to {
             for string in format_strings(number, config.color).iter() {
