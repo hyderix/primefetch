@@ -62,7 +62,7 @@ pub mod utils {
         let mut res_vector: Vec<u64> = vec![];
 
         for num in 2..=largest_num_tested {
-            while (number_check % num == 0) {
+            while number_check % num == 0 {
                 res_vector.push(num);
                 number_check = number_check / num;
             }
